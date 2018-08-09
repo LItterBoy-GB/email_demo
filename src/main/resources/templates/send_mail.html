@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.2/jquery.form.min.js"></script>
+</head>
+<body>
+    <input id="add" type="button" value="添加收件人"/>
+    <input id="add_file" type="button" value="添加文件"/>
+    <input id="send" type="button" value="发送"/>
+    <form id="form" enctype="multipart/form-data" method="post" action="/send_mail">
+        <table border="1" cellpadding="10">
+            <tr>
+                <td>收件人</td><td id="tos_td"><input name="tos" type="email"/></td>
+            </tr>
+            <tr>
+                <td>标题</td><td><input name="subject" type="text"/></td>
+            </tr>
+            <tr>
+                <td>正文</td>
+                <td><textarea name="text" cols="60" rows="10"></textarea></td>
+            </tr>
+            <tr>
+                <td>文件</td><td id="files_td"><input name="files" type="file"/></td>
+            </tr>
+        </table>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    </form>
+</body>
+<script>
+    $("#add").click(function(){
+        var tos_td = $("#tos_td");
+        $("<br><input name=\"tos\" type=\"email\"/>").appendTo(tos_td);
+        $("<label>&nbsp;&nbsp;</label>").appendTo($(tos_td));
+        var delete_ele = $("<input name=\"delete\" value=\"-\" type='button'>");
+        delete_ele.appendTo(tos_td);
+        delete_ele.click(function(){
+            $(this).prev().remove();
+            $(this).prev().remove();
+            $(this).prev().remove();
+            $(this).remove();
+        });
+    });
+    $("#add_file").click(function(){
+        var files_td = $("#files_td");
+        $("<br><input name=\"files\" type=\"file\"/>").appendTo($(files_td));
+        $("<label></label>").appendTo($(files_td));
+        var delete_ele = $("<input name=\"delete\" value=\"-\" type='button'>");
+        delete_ele.appendTo(files_td);
+        delete_ele.click(function(){
+            $(this).prev().remove();
+            $(this).prev().remove();
+            $(this).prev().remove();
+            $(this).remove();
+        });
+    });
+    $("#send").click(function(){
+        $("#form").ajaxSubmit(function(data){
+            alert(data);
+        });
+    });
+</script>
+</html>
